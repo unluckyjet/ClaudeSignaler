@@ -1,0 +1,16 @@
+node_modules/
+
+# Generated at render time - run `npm run render` after cloning.
+sounds/*.wav
+sounds/warm/
+sounds/.render-stamp.json
+
+# Generated on first signal (or by `npm run install-hooks`).
+scripts/lib/foreground.dll
+
+# Local runtime state.
+logs/
+.state/
+
+# Local working notes.
+plan/
