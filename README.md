@@ -30,6 +30,15 @@ cd ClaudeSignaler
 
 Then restart Claude Code, since hooks load at session start.
 
+**Then tune the focus gate — this is a required step, not a nicety.** Click your
+Claude Code window and run `.\scripts\install.ps1 -WhoHasFocus`. It prints the
+foreground window title; set `focusPattern` in `config.json` to a regex that
+matches it. The shipped default (`claude`) is a guess, because the right answer
+depends on what your terminal puts in its title bar. Too broad and the gate
+silently suppresses everything; too narrow and it never fires. Either way
+`logs\signaler.log` records the reason for every skip, so check there first if
+the behaviour surprises you.
+
 ```powershell
 .\scripts\install.ps1 -Test         # fire all four signals now
 .\scripts\install.ps1 -Status       # what is registered
@@ -52,6 +61,12 @@ hook entries pointing into this repo are ever touched.
 The escalation is the point. A finished turn is a soft nudge. Sixty seconds of
 you not reacting means you left the room, and that is the one worth sending to
 your phone.
+
+Two events are deliberately left unwired. `Notification/agent_completed` would
+duplicate `Stop` on the same turn, and unlike `Stop` it does not carry
+`last_assistant_message`, so it can only produce a worse, contentless toast.
+`SubagentStop` fires many times inside a single turn and would bury the signal
+that matters.
 
 ## Gates
 

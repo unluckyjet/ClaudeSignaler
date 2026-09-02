@@ -136,8 +136,12 @@ function Get-SignalFromPayload {
         'StopFailure' { return @('failed', 'StopFailure') }
         'Notification' {
             if ($NeedsInputTypes -contains $type) { return @('needsInput', $type) }
-            if ($type -eq 'idle_prompt')     { return @('idle', $type) }
-            if ($type -eq 'agent_completed') { return @('done', $type) }
+            if ($type -eq 'idle_prompt') { return @('idle', $type) }
+            # agent_completed is deliberately not mapped to 'done'. Stop already
+            # covers the finish case and, unlike Notification, carries
+            # last_assistant_message, so it is the strictly better source. Mapping
+            # both would put two toasts on one turn and leave the cooldown window
+            # as the only thing hiding it.
             return @($null, $type)
         }
     }

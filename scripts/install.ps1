@@ -288,4 +288,12 @@ Write-Host ""
 Write-Host "Other hooks in settings.json were left untouched."
 Write-Host "Restart Claude Code (or start a new session) to pick these up."
 Write-Host ""
+Write-Host "NEXT, and do not skip it:" -ForegroundColor Yellow
+Write-Host "  Click your Claude Code window, then run:  .\scripts\install.ps1 -WhoHasFocus"
+Write-Host "  Set config.focusPattern to a regex matching what it prints."
+Write-Host ""
+Write-Host "  Until you do, focusPattern is a guess. Too broad and it silently"
+Write-Host "  suppresses everything; too narrow and it never suppresses at all."
+Write-Host "  Either way logs\signaler.log records the reason for every skip."
+Write-Host ""
 exit 0
