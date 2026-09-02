@@ -1,0 +1,82 @@
+{
+  "_readme": "Knobs for the Claude Code signaller. Edit freely; no rebuild step. Run `pwsh scripts/install.ps1 -Test` to preview every signal.",
+
+  "events": {
+    "done": {
+      "enabled": true,
+      "toast": true,
+      "sound": "Notification.Default",
+      "speak": false,
+      "push": false,
+      "minTurnSeconds": 30,
+      "_when": "Claude finished a turn and handed control back to you.",
+      "_minTurnSeconds": "Stay silent for turns shorter than this. The single best noise filter: it kills the 'ok, done' chatter and only speaks up for work you actually walked away from."
+    },
+    "needsInput": {
+      "enabled": true,
+      "toast": true,
+      "sound": "Notification.IM",
+      "speak": false,
+      "push": false,
+      "minTurnSeconds": 0,
+      "_when": "Claude is blocked on you: a permission prompt, or an agent asking a question. You are the bottleneck, so this always fires."
+    },
+    "idle": {
+      "enabled": true,
+      "toast": true,
+      "sound": "Notification.Reminder",
+      "speak": false,
+      "push": true,
+      "minTurnSeconds": 0,
+      "_when": "Fires ~60s after Claude stopped and you still have not come back. The escalation rung: this is the one that means you genuinely walked away, so it is the one wired to phone push."
+    },
+    "failed": {
+      "enabled": true,
+      "toast": true,
+      "sound": "Notification.Looping.Alarm",
+      "speak": false,
+      "push": false,
+      "minTurnSeconds": 0,
+      "_when": "The turn died on an API error (rate limit, overload, auth)."
+    },
+    "_sound": "Any ms-winsoundevent name: Notification.Default, .IM, .Mail, .Reminder, .SMS, .Looping.Alarm, .Looping.Call. Empty string for a silent toast.",
+    "_speak": "Read a short summary of what Claude said out loud, via the built-in Windows voice. No API key, no network.",
+    "_push": "Send it to your phone. Requires the push block below."
+  },
+
+  "whenFocused": "silent",
+  "focusPattern": "claude",
+  "_whenFocused": "silent = say nothing when you are already looking at the Claude window. full = notify regardless.",
+  "_focusPattern": "Case-insensitive regex matched against the foreground window title. Claude Code sets the terminal title, so this can distinguish tabs, not just apps. Run `scripts/install.ps1 -WhoHasFocus` to see the live title and tune this.",
+
+  "cooldownMs": 1500,
+  "_cooldownMs": "Swallow a second signal fired within this window, so overlapping events do not stack.",
+
+  "toast": {
+    "aumid": "Claude_pzs8sxrjxfjjc!Claude",
+    "bodyMaxChars": 180,
+    "_aumid": "Borrowing Claude Desktop's app id is what gets you the real Claude icon and name on the toast instead of a generic PowerShell one. If Claude Desktop is not installed, the toast falls back to a system sound.",
+    "_bodyMaxChars": "How much of Claude's closing message to show. It is stripped of code fences and markdown first."
+  },
+
+  "speech": {
+    "rate": 1,
+    "volume": 80,
+    "maxWords": 14,
+    "_rate": "-10 (slowest) to 10 (fastest).",
+    "_maxWords": "Speech is a headline, not a readout. Keep it short."
+  },
+
+  "push": {
+    "enabled": false,
+    "server": "https://ntfy.sh",
+    "ntfyTopic": "",
+    "_enabled": "Turn on, then set ntfyTopic to any hard-to-guess string, e.g. claude-a7f3k9x2. Install the ntfy app on your phone and subscribe to that exact topic. No account, no key.",
+    "_warning": "ntfy.sh topics are public to anyone who guesses the name, and the body contains Claude's closing message. Pick a long random topic, or self-host and change server."
+  },
+
+  "logging": {
+    "enabled": true,
+    "maxLines": 400
+  }
+}
